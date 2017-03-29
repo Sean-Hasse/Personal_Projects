@@ -1,16 +1,40 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Battleship
 {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
+    public enum GameState
+    {
+        Menu,       // main menu of the game. 
+        SetUp,      // phase of the game where ships are placed
+        Game,       // phase of the game when interactions between player and computer occurs
+        GameOver    // When you win or lose
+    }
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        Texture2D background;
+        SpriteFont font32;
+        SpriteFont font16;
+        GameState myState;
+
+        Ships AircraftCarrier;
+        Ships Battleship;
+        Ships Submarine;
+        Ships Destroyer;
+        Ships PatrolBoat;
+
+        List<Ships> playerShips;
+        List<Ships> computerShips;
+        int[,] playerShotsFired;
+        int[,] computerShotsFired;
 
         public Game1()
         {
@@ -27,6 +51,16 @@ namespace Battleship
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            myState = GameState.Menu;
+
+            AircraftCarrier = new Ships(5, "Aircraft Carrier");
+            Battleship = new Ships(4, "Battleship");
+            Submarine = new Ships(3, "Submarine");
+            Destroyer = new Ships(3, "Destroyer");
+            PatrolBoat = new Ships(2, "Patrol Boat");
+
+            playerShips = new List<Ships>() { AircraftCarrier, Battleship, Submarine, Destroyer, PatrolBoat };
+            computerShips = new List<Ships>() { AircraftCarrier, Battleship, Submarine, Destroyer, PatrolBoat };
 
             base.Initialize();
         }
@@ -41,6 +75,10 @@ namespace Battleship
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            background = Content.Load<Texture2D>("Blue Ocean");
+            font16 = Content.Load<SpriteFont>("Arial16");
+            font32 = Content.Load<SpriteFont>("Arial32");
         }
 
         /// <summary>
